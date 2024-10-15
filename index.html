@@ -505,8 +505,12 @@
 
         /* Add media query for mobile devices */
         @media (max-width: 767px) {
-            .hero-image-container {
-                height: 200px;
+            body {
+                background-color: #f0f0f0; /* וודא שהרקע לא שחור */
+            }
+
+            .container-fluid {
+                background-color: transparent; /* הסר כל רקע שחור אפשרי */
             }
 
             #news-ticker {
@@ -520,6 +524,12 @@
 
             .hero-image-container {
                 margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
+                height: auto; /* אפשר לתמונה להתאים את עצמה */
+            }
+
+            .hero-image {
+                max-width: 100%;
+                height: auto;
             }
 
             .card-wrapper, .card-wrapper.personal-tasks {
@@ -528,7 +538,8 @@
             }
 
             .card.personal-tasks {
-                height: 450px; /* אותו גובה כמו שאר הכרטיסיות */
+                height: auto; /* אפשר לכרטיסייה להתרחב לפי התוכן */
+                min-height: 450px;
             }
 
             .card-wrapper.personal-tasks {
@@ -538,30 +549,34 @@
             .app-icons {
                 display: none;
             }
+
+            /* הוסף שקיפות לכל האלמנטים שעלולים להיות שחורים */
+            .card, .card-inner, .card-front, .card-back {
+                background-color: rgba(255, 255, 255, 0.9);
+            }
         }
     </style>
 </head>
 <body>
+    <div id="news-ticker">
+        <div id="news-ticker-content">
+            <!-- תוכן התזכורות כאן -->
+        </div>
+    </div>
     <div class="container-fluid p-0">
         <div class="hero-image-container">
             <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
         </div>
         <div class="container mt-5">
             <h1>שגרות העבודה היומיות שלי</h1>
-
             <div class="card-container" id="card-container">
                 <!-- כרטיסיות יוכנסו כאן דינמית -->
             </div>
         </div>
     </div>
 
-    <div id="news-ticker">
-        <div id="news-ticker-content">
-        </div>
-    </div>
-
     <div class="app-icons">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="app-icon" onclick="openSpotify()">
+        <!-- אייקונים של אפליקציות כאן -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
