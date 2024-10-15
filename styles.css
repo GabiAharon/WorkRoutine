@@ -482,3 +482,63 @@ body {
     overflow-y: auto;
     max-height: 400px;
 }
+
+/* הקוד הקיים נשאר כמו שהוא */
+
+/* מדיה קווירי לטלפונים ניידים */
+@media (max-width: 767px) {
+    .card-wrapper {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .card {
+        height: auto;
+        min-height: 300px;
+    }
+
+    .card-wrapper.personal-tasks {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .hero-image-container {
+        height: 200px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+    }
+
+    .app-icons {
+        bottom: 60px;
+        top: auto;
+        left: 10px;
+        transform: none;
+        flex-direction: row;
+    }
+}
+
+/* סגנונות להתקנת האפליקציה */
+#install-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+    z-index: 1000;
+}
+
+#install-button:hover {
+    background-color: #0056b3;
+}
