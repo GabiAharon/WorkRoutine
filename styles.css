@@ -20,17 +20,14 @@ h1 {
 
 /* הוסף את ה-media query לסוף הקובץ */
 @media (max-width: 767px) {
-    #news-ticker {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background-color: rgba(0, 0, 0, 0.8);
+    .hero-image-container {
+        height: 200px;
     }
 
-    .hero-image-container {
-        margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
+    #news-ticker {
+        position: relative;
+        top: -200px;
+        margin-bottom: -40px;
     }
 
     .card-wrapper {
