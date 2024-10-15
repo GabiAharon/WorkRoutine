@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שגרות העבודה היומיות שלי</title>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="שגרות העבודה היומיות שלי">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="שגרות עבודה">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: 'Assistant', sans-serif;
@@ -494,29 +502,81 @@
             overflow-y: auto;
             max-height: 400px;
         }
+
+        /* Add media query for mobile devices */
+        @media (max-width: 767px) {
+            body {
+                background-color: #f0f0f0; /* וודא שהרקע לא שחור */
+            }
+
+            .container-fluid {
+                background-color: transparent; /* הסר כל רקע שחור אפשרי */
+            }
+
+            #news-ticker {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1001;
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+
+            .hero-image-container {
+                margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
+                height: auto; /* אפשר לתמונה להתאים את עצמה */
+            }
+
+            .hero-image {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .card-wrapper, .card-wrapper.personal-tasks {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .card.personal-tasks {
+                height: auto; /* אפשר לכרטיסייה להתרחב לפי התוכן */
+                min-height: 450px;
+            }
+
+            .card-wrapper.personal-tasks {
+                order: -1;
+            }
+
+            .app-icons {
+                display: none;
+            }
+
+            /* הוסף שקיפות לכל האלמנטים שעלולים להיות שחורים */
+            .card, .card-inner, .card-front, .card-back {
+                background-color: rgba(255, 255, 255, 0.9);
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="news-ticker">
+        <div id="news-ticker-content">
+            <!-- תוכן התזכורות כאן -->
+        </div>
+    </div>
     <div class="container-fluid p-0">
         <div class="hero-image-container">
             <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
         </div>
         <div class="container mt-5">
             <h1>שגרות העבודה היומיות שלי</h1>
-
             <div class="card-container" id="card-container">
                 <!-- כרטיסיות יוכנסו כאן דינמית -->
             </div>
         </div>
     </div>
 
-    <div id="news-ticker">
-        <div id="news-ticker-content">
-        </div>
-    </div>
-
     <div class="app-icons">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="app-icon" onclick="openSpotify()">
+        <!-- אייקונים של אפליקציות כאן -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -927,6 +987,19 @@
             setTimeout(function() {
                 window.open('https://trello.com', '_blank');
             }, 100);
+        }
+
+        // Add this code for service worker registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
         }
     </script>
 </body>
