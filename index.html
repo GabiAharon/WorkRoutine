@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שגרות העבודה היומיות שלי</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="hero-image-container">
+            <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
+        </div>
+        <div class="container mt-5">
+            <h1>שגרות העבודה היומיות שלי</h1>
+
+            <div class="card-container" id="card-container">
+                <!-- כרטיסיות יוכנסו כאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <div id="news-ticker">
+        <div id="news-ticker-content">
+        </div>
+    </div>
+
+    <div class="app-icons">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="app-icon" onclick="openSpotify()">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        const cardData = [
+            {
+                title: "Salesforce",
+                frontContent: `
+                    <img src="https://c1.sfdcstatic.com/content/dam/sfdc-docs/www/logos/logo-salesforce.svg" alt="Salesforce" class="card-icon" onclick="window.open('https://login.salesforce.com/', '_blank')">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות Salesforce</h5>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task1" class="checkbox-custom">
+                            <label for="salesforce-task1" class="checkbox-custom-label">לעבור על כל מרכז</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task2" class="checkbox-custom">
+                            <label for="salesforce-task2" class="checkbox-custom-label">לשים לב למגמה של חניכים</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task3" class="checkbox-custom">
+                            <label for="salesforce-task3" class="checkbox-custom-label">לוודא תיעוד מפגשים</label>
+                        </li>
+                    </ul>
+                    <button class="btn btn-custom mt-3" onclick="completeCard(this)">השלם משימות</button>
+                `
+            },
+            {
+                title: "תיקי מרכז",
+                frontContent: `
+                    <div class="center-item">
+                        <a href="https://docs.google.com/spreadsheets/d/1WUox7YWDQ4rdzjoua7ymkd3_P6LSfn8TH0bMP6BRqas/edit?gid=0#gid=0" target="_blank" class="merkaz-button">נתיבות</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1DZP8pN_IFJkIEF3tRuQKmSnZwNWbrzfvO4vs9EwcFhI/edit#gid=1505285157" target="_blank" class="merkaz-button">באר שבע</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1aBxCQuz9PPXrVF85Ww54nvNZpnfJXDMhSAz3T4AnR-s/edit?gid=0#gid=0" target="_blank" class="merkaz-button">ירושלים-בויאר</a>
+                        <a href="https://docs.google.com/spreadsheets/d/163_7WH6g9Q8uoW-U5rJTwnlXZy7J7m0VrXmcXyV3AqY/edit?gid=0#gid=0" target="_blank" class="merkaz-button">כפר חב"ד</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1J5ntGNoEI_J7fsDeljPROgGm7VLtVPbkWtUr_69fQVo/edit?gid=0#gid=0" target="_blank" class="merkaz-button">שדרות</a>
+                    </div>
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות תיקי מרכז</h5>
+                    <div class="merkaz-selector">
+                        <select id="merkaz-select">
+                            <option value="">בחר מרכז</option>
+                            <option value="netivot">נתיבות</option>
+                            <option value="beer-sheva">באר שבע</option>
+                            <option value="jerusalem">ירושלים-בויאר</option>
+                            <option value="kfar-chabad">כפר חב"ד</option>
+                            <option value="sderot">שדרות</option>
+                        </select>
+                    </div>
+                    <div id="netivot" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task1" class="checkbox-custom">
+                                <label for="netivot-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task2" class="checkbox-custom">
+                                <label for="netivot-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task3" class="checkbox-custom">
+                                <label for="netivot-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="beer-sheva" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task1" class="checkbox-custom">
+                                <label for="beer-sheva-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task2" class="checkbox-custom">
+                                <label for="beer-sheva-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task3" class="checkbox-custom">
+                                <label for="beer-sheva-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="jerusalem" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task1" class="checkbox-custom">
+                                <label for="jerusalem-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task2" class="checkbox-custom">
+                                <label for="jerusalem-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task3" class="checkbox-custom">
+                                <label for="jerusalem-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="kfar-chabad" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task1" class="checkbox-custom">
+                                <label for="kfar-chabad-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task2" class="checkbox-custom">
+                                <label for="kfar-chabad-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task3" class="checkbox-custom">
+                                <label for="kfar-chabad-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="sderot" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task1" class="checkbox-custom">
+                                <label for="sderot-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task2" class="checkbox-custom">
+                                <label for="sderot-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task3" class="checkbox-custom">
+                                <label for="sderot-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="completed-merkaz" id="completed-merkaz"></div>
+                    <button class="btn btn-custom mt-3" onclick="completeMerkazCard(this)">השלם משימות</button>
+                    <button class="btn btn-edit" onclick="editMerkazCard(this)">ערוך שוב</button>
+                `
+            },
+            {
+                title: "מעבר על מיילים",
+                frontContent: `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" alt="Outlook" class="card-icon" onclick="openOutlook()">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות מיילים</h5>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="email-task1" class="checkbox-custom">
+                            <label for="email-task1" class="checkbox-custom-label">לענות למיילים דחופים</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="email-task2" class="checkbox-custom">
+                            <label for="email-task2" class="checkbox-custom-label">לארגן תיבת דואר נכנס</label>
+                        </li>
+                    </ul>
+                    <button class="btn btn-custom mt-3" onclick="completeCard(this)">השלם משימות</button>
+                `
+            },
+            {
+                title: "Trello",
+                frontContent: `
+                    <img src="https://cdn.worldvectorlogo.com/logos/trello.svg" alt="Trello" class="card-icon" onclick="openTrello()">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות Trello</h5>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="trello-task1" class="checkbox-custom">
+                            <label for="trello-task1" class="checkbox-custom-label">לעבור על משימות חדשות</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="trello-task2" class="checkbox-custom">
+                            <label for="trello-task2" class="checkbox-custom-label">לעדכן סטטוס משימות</label>
+                        </li>
+                    </ul>
+                    <button class="btn btn-custom mt-3" onclick="completeCard(this)">השלם מ��ימות</button>
+                `
+            },
+            {
+                title: "לוז קבוע",
+                frontContent: `<button class="btn btn-custom" onclick="flipCard(this)">צפה בלוז</button>`,
+                backContent: `
+                    <h5 class="card-title">לוז שבועי קבוע</h5>
+                    <div class="schedule-container" style="height: 200px; overflow-y: auto;">
+                        <ul class="schedule-list">
+                            <li><strong>יום ראשון:</strong> 09:00 - פ.ע עם יוני קדם, 14:00 - פ.ע עם יקיר כרמל</li>
+                            <li><strong>יום שני:</strong> 11:00 - פ.ע עם תאיר חיים</li>
+                            <li><strong>יום שלישי:</strong> 10:00 - פ.ע עם מנשה</li>
+                            <li><strong>יום רביעי:</strong> 12:00 - ישיבת צוות</li>
+                            <li><strong>יום חמישי:</strong> 13:00 - פ.ע עם יונת גרינפלד</li>
+                        </ul>
+                    </div>
+                `,
+                isFixedSchedule: false
+            },
+            {
+                title: "משימות אישיות",
+                frontContent: `<button class="btn btn-custom" onclick="flipCard(this)">��וסף/צפה במשימות</button>`,
+                backContent: `
+                    <h5 class="card-title">משימות אישיות</h5>
+                    <input type="text" id="new-task" class="task-input" placeholder="הוסף משימה חדשה (הוסף 'דחוף' או 'בנחת' בסוף)">
+                    <button class="btn btn-custom" onclick="addTask()">הוסף משימה</button>
+                    <h6 class="mt-3">משימות דחופות:</h6>
+                    <ul id="urgent-tasks" class="task-list"></ul>
+                    <h6 class="mt-3">משימות בנחת:</h6>
+                    <ul id="relaxed-tasks" class="task-list"></ul>
+                `,
+                isPersonalTasks: true
+            }
+        ];
+
+        function createCard(cardInfo) {
+            const cardWrapper = document.createElement('div');
+            cardWrapper.className = 'card-wrapper' + 
+                (cardInfo.isPersonalTasks ? ' personal-tasks' : '') + 
+                (cardInfo.isFixedSchedule ? ' fixed-schedule' : '');
+            cardWrapper.innerHTML = `
+                <div class="card ${cardInfo.isPersonalTasks ? 'personal-tasks' : ''} ${cardInfo.isFixedSchedule ? 'fixed-schedule' : ''}">
+                    <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
+                    <div class="flip-icon"><i class="fas fa-sync-alt"></i></div>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h5 class="card-title">${cardInfo.title}</h5>
+                            ${cardInfo.frontContent}
+                        </div>
+                        <div class="card-back">
+                            ${cardInfo.backContent}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // הוספת מאזין אירועים למקש אנטר עבור שדה הקלט של משימות אישיות
+            if (cardInfo.isPersonalTasks) {
+                const inputField = cardWrapper.querySelector('#new-task');
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // מניעת התנהגות ברירת המחדל של הטופס
+                        addTask();
+                    }
+                });
+            }
+
+            return cardWrapper;
+        }
+
+        const cardContainer = document.getElementById('card-container');
+        cardData.forEach(card => {
+            cardContainer.appendChild(createCard(card));
+        });
+
+        new Sortable(cardContainer, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            forceFallback: true,
+            fallbackClass: 'sortable-fallback'
+        });
+
+        function completeCard(button) {
+            const card = button.closest('.card');
+            card.classList.toggle('completed');
+            updateCompletionStatus(card);
+        }
+
+        function updateCompletionStatus(card) {
+            const frontSide = card.querySelector('.card-front');
+            const backSide = card.querySelector('.card-back');
+            const completionMessage = card.classList.contains('completed') ? 'הושלם' : '';
+            
+            frontSide.querySelector('.card-title').textContent = frontSide.querySelector('.card-title').textContent.split(' - ')[0] + (completionMessage ? ' - ' + completionMessage : '');
+            backSide.querySelector('.card-title').textContent = backSide.querySelector('.card-title').textContent.split(' - ')[0] + (completionMessage ? ' - ' + completionMessage : '');
+        }
+
+        document.querySelectorAll('.card-title, .flip-icon').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const card = this.closest('.card');
+                card.querySelector('.card-inner').style.transform = 
+                    card.querySelector('.card-inner').style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+            });
+        });
+
+        document.querySelectorAll('.drag-handle').forEach(handle => {
+            handle.addEventListener('mousedown', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        const newsTicker = document.getElementById('news-ticker-content');
+        const newsItems = [
+            'תזכורת: לשלוח הודעה למנהלים לסגור דיווחי שעות כל יום רביעי',
+            'בדוק את הדוחות החודשיים בתחילת כל חודש',
+            'תזכורת: פגישת צוות שבועית ביום שני',
+            'עדכן את תוכנית העבודה השבועית',
+            'בדוק את התקדמות הפרויקטים בסוף כל שבוע'
+        ];
+        newsTicker.innerHTML = newsItems.join(' | ');
+
+        function completeMerkazCard(button) {
+            const card = button.closest('.card');
+            const allMerkazTasks = card.querySelectorAll('.merkaz-tasks');
+            const allCompleted = Array.from(allMerkazTasks).every(merkaz => {
+                const checkboxes = merkaz.querySelectorAll('.checkbox-custom');
+                return Array.from(checkboxes).every(checkbox => checkbox.checked);
+            });
+            
+            if (allCompleted) {
+                card.classList.add('completed');
+                updateCompletionStatus(card);
+                document.getElementById('completed-merkaz').textContent = 'כל המרכזים הושלמו';
+            } else {
+                const confirmClose = confirm('לא סיימת את כלל המרכזים, האם אתה בטוח שברצונך לסגור את הכרטיסייה?');
+                if (confirmClose) {
+                    card.classList.add('completed');
+                    updateCompletionStatus(card);
+                    document.getElementById('completed-merkaz').textContent = 'הכרטיסייה נסגרה ללא השלמת כל המרכזים';
+                }
+            }
+        }
+
+        function editMerkazCard(button) {
+            const card = button.closest('.card');
+            card.classList.remove('completed');
+            updateCompletionStatus(card);
+            card.querySelectorAll('.checkbox-custom').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            card.querySelector('.btn-custom').textContent = 'השלם משימות';
+            card.querySelector('.btn-custom').disabled = true;
+            document.getElementById('completed-merkaz').textContent = '';
+        }
+
+        document.getElementById('merkaz-select').addEventListener('change', function() {
+            const selectedMerkaz = this.value;
+            document.querySelectorAll('.merkaz-tasks').forEach(merkaz => {
+                merkaz.style.display = 'none';
+            });
+            if (selectedMerkaz) {
+                document.getElementById(selectedMerkaz).style.display = 'block';
+            }
+        });
+
+        function flipCard(button) {
+            const card = button.closest('.card');
+            card.querySelector('.card-inner').style.transform = 
+                card.querySelector('.card-inner').style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+        }
+
+        function addTask() {
+            const taskInput = document.getElementById('new-task');
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                let priority = 'relaxed'; // ברירת מחדל היא 'בנחת'
+                let cleanTaskText = taskText;
+
+                if (taskText.endsWith('דחוף')) {
+                    priority = 'urgent';
+                    cleanTaskText = taskText.slice(0, -5).trim(); // הסרת המילה 'דחוף' מסוף המשימה
+                } else if (taskText.endsWith('בנחת')) {
+                    cleanTaskText = taskText.slice(0, -5).trim(); // הסרת המילה 'בנחת' מסוף המשימה
+                }
+
+                const taskList = document.getElementById(priority === 'urgent' ? 'urgent-tasks' : 'relaxed-tasks');
+                const taskItem = document.createElement('li');
+                taskItem.className = 'task-list-item';
+                const checkboxId = 'personal-task-' + Date.now();
+                taskItem.innerHTML = `
+                    <input type="checkbox" id="${checkboxId}" class="checkbox-custom" onchange="toggleTaskCompletion(this)">
+                    <label for="${checkboxId}" class="checkbox-custom-label">${cleanTaskText}</label>
+                `;
+                taskList.appendChild(taskItem);
+                taskInput.value = '';
+            }
+        }
+
+        function toggleTaskCompletion(checkbox) {
+            const taskLabel = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                taskLabel.style.textDecoration = 'line-through';
+            } else {
+                taskLabel.style.textDecoration = 'none';
+            }
+        }
+
+        function openOutlook() {
+            // נסה לפתוח את Outlook באמצעות פרוטוקול מותאם אישית
+            window.location.href = "ms-outlook:";
+            
+            // אם הפרוטוקול הראשון לא עובד, נסה חלופה
+            setTimeout(function() {
+                window.location.href = "outlook:";
+            }, 100);
+        }
+
+        function openSpotify() {
+            window.location.href = "spotify:";
+            
+            setTimeout(function() {
+                window.open('https://open.spotify.com', '_blank');
+            }, 100);
+        }
+
+        function openTrello() {
+            window.location.href = "trello:";
+            
+            setTimeout(function() {
+                window.open('https://trello.com', '_blank');
+            }, 100);
+        }
+
+        // הוסף את הקוד הבא בסוף ה-script הקיים
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
