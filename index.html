@@ -4,13 +4,528 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שגרות העבודה היומיות שלי</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#000000">
-    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="שגרות העבודה היומיות שלי">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
-    <link href="/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f0f0f0;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-image-container {
+            width: 100%;
+            height: 460px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.05);
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* החזרנו את הרווח המקורי בין הכרטיסיות */
+        }
+
+        .card-wrapper {
+            flex: 0 0 calc(20% - 16px); /* התאמנו את הרוחב כדי לשמור על 5 כרטיסיות בשורה עם רווחים */
+            max-width: calc(20% - 16px);
+            margin-bottom: 20px;
+        }
+
+        .card {
+            height: 450px;
+            width: 100%;
+        }
+
+        .card-wrapper:nth-child(-n+5) .card {
+            height: 500px;
+        }
+
+        .card-wrapper:nth-child(-n+5) {
+            transform: scale(1.02); /* הקטנו מעט את הסקייל כדי למנוע חפיפה */
+            z-index: 1;
+        }
+
+        .card-wrapper.personal-tasks {
+            flex: 0 0 calc(40% - 16px);
+            max-width: calc(40% - 16px);
+        }
+
+        .card.personal-tasks {
+            height: 550px;
+        }
+
+        .card-wrapper.merkaz-files,
+        .card.merkaz-files {
+            flex: 0 0 calc(40% - 16px);
+            max-width: calc(40% - 16px);
+            height: 500px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 1rem;
+            overflow-y: auto;
+            transform-style: preserve-3d;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, rgba(238, 119, 82, 0.7), rgba(231, 60, 126, 0.7));
+            color: white;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, rgba(35, 166, 213, 0.7), rgba(35, 213, 171, 0.7));
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+
+        .card-title:hover {
+            color: #f0f0f0;
+        }
+
+        .btn-custom, .btn-edit {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .completed {
+            opacity: 0.6;
+            filter: grayscale(100%);
+        }
+
+        .completed::after {
+            content: "הושלם";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #28a745;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: right;
+        }
+
+        .task-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .center-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #news-ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #news-ticker-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        .merkaz-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.2rem;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .merkaz-button:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .checkbox-custom {
+            display: none;
+        }
+
+        .checkbox-custom-label {
+            display: inline-block;
+            position: relative;
+            padding-right: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .checkbox-custom + .checkbox-custom-label:before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 3px;
+            position: absolute;
+            right: 0;
+            top: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:before {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:after {
+            content: '\2714';
+            position: absolute;
+            top: 0;
+            right: 4px;
+            color: white;
+        }
+
+        .completed-tasks {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        .drag-handle, .flip-icon {
+            position: absolute;
+            top: 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .drag-handle {
+            right: 10px;
+            color: #ffffff;
+        }
+
+        .flip-icon {
+            left: 10px;
+            color: #ffffff;
+        }
+
+        .drag-handle:hover, .flip-icon:hover {
+            color: #f0f0f0;
+        }
+
+        .merkaz-selector {
+            margin-bottom: 1rem;
+        }
+
+        .merkaz-selector select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .merkaz-tasks {
+            display: none;
+        }
+
+        .merkaz-tasks.active {
+            display: block;
+        }
+
+        .completed-merkaz {
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: #f8f9fa;
+        }
+
+        .sortable-drag {
+            opacity: 0.9;
+        }
+
+        .sortable-chosen {
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .sortable-fallback {
+            opacity: 0.8;
+        }
+
+        .card-title, .btn-custom, .merkaz-button {
+            transform: translateZ(30px);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-title,
+        .card:hover .btn-custom,
+        .card:hover .merkaz-button {
+            transform: translateZ(50px);
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .task-priority {
+            margin-bottom: 1rem;
+        }
+
+        .task-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-text {
+            flex-grow: 1;
+        }
+
+        .task-urgent {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .task-relaxed {
+            color: #28a745;
+        }
+
+        .card-wrapper.personal-tasks {
+            flex: 0 0 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+            margin: 20px auto;
+        }
+
+        .card.personal-tasks {
+            height: 450px; /* הגדלנו את גובה כרטיסיית המשימות האישיות */
+        }
+
+        .task-list-item {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            direction: rtl;
+        }
+
+        .task-list-item input[type="checkbox"] {
+            margin-left: 10px;
+            order: -1;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        #urgent-tasks {
+            background-color: #ffeeee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #relaxed-tasks {
+            background-color: #eeffee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #urgent-tasks .checkbox-custom-label,
+        #relaxed-tasks .checkbox-custom-label {
+            color: #333; /* צבע כהה יותר לטקסט */
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .app-icons {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .app-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .schedule-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .schedule-list > li {
+            margin-bottom: 15px;
+        }
+
+        .schedule-list > li > ul {
+            list-style-type: none;
+            padding-right: 20px;
+        }
+
+        .schedule-list > li > ul > li {
+            margin-bottom: 5px;
+        }
+
+        /* הוספת סגנון חדש לאפשר גלילה */
+        body {
+            overflow-y: auto;
+        }
+
+        /* עדכון סגנון לכרטיסיית המשימות האישיות */
+        .card.personal-tasks .card-back {
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        /* Add media query for mobile devices */
+        @media (max-width: 767px) {
+            .hero-image-container {
+                height: 200px;
+            }
+
+            #news-ticker {
+                position: relative;
+                top: -200px;
+                margin-bottom: -40px;
+            }
+
+            .card-wrapper {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .card-wrapper.personal-tasks {
+                order: -1;
+            }
+
+            .app-icons {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid p-0">
@@ -34,8 +549,6 @@
     <div class="app-icons">
         <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="app-icon" onclick="openSpotify()">
     </div>
-
-    <button id="install-button" style="display: none;">התקן אפליקציה</button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -228,7 +741,7 @@
                         </ul>
                     </div>
                 `,
-                isFixedSchedule: true
+                isFixedSchedule: false
             },
             {
                 title: "משימות אישיות",
@@ -447,65 +960,12 @@
             }, 100);
         }
 
-        // פונקציה חדשה לסידור הכרטיסיות
-        function arrangeCards() {
-            const cardContainer = document.getElementById('card-container');
-            const cards = Array.from(cardContainer.children);
-            const personalTaskCard = cards.find(card => card.querySelector('.card').classList.contains('personal-tasks'));
-            
-            if (window.innerWidth <= 767 && personalTaskCard) {
-                cardContainer.insertBefore(personalTaskCard, cardContainer.firstChild);
-            } else {
-                // החזר את הסדר המקורי אם לא במצב נייד
-                cards.sort((a, b) => {
-                    return cardData.findIndex(card => card.title === a.querySelector('.card-title').textContent) - 
-                           cardData.findIndex(card => card.title === b.querySelector('.card-title').textContent);
-                }).forEach(card => cardContainer.appendChild(card));
-            }
-        }
-
-        // קריאה לפונקציה בטעינת הדף ובשינוי גודל החלון
-        window.addEventListener('load', arrangeCards);
-        window.addEventListener('resize', arrangeCards);
-
-        // עדכון הקוד להתקנת האפליקציה
-        let deferredPrompt;
-        const installButton = document.getElementById('install-button');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installButton.style.display = 'block';
-        });
-
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                }
-                deferredPrompt = null;
-            }
-            installButton.style.display = 'none';
-        });
-
-        window.addEventListener('appinstalled', () => {
-            installButton.style.display = 'none';
-            deferredPrompt = null;
-        });
-
-        // בדיקה אם האפליקציה כבר מותקנת
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            installButton.style.display = 'none';
-        }
-
-        // רישום Service Worker
+        // Add this code for service worker registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
-                        console.log('Service Worker registered successfully:', registration.scope);
+                        console.log('Service Worker registered successfully:', registration);
                     })
                     .catch(error => {
                         console.log('Service Worker registration failed:', error);
