@@ -7,6 +7,9 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="שגרות העבודה היומיות שלי">
     <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="שגרות עבודה">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -507,14 +510,25 @@
             }
 
             #news-ticker {
-                position: relative;
-                top: -200px;
-                margin-bottom: -40px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1001;
+                background-color: rgba(0, 0, 0, 0.8);
             }
 
-            .card-wrapper {
+            .hero-image-container {
+                margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
+            }
+
+            .card-wrapper, .card-wrapper.personal-tasks {
                 flex: 0 0 100%;
                 max-width: 100%;
+            }
+
+            .card.personal-tasks {
+                height: 450px; /* אותו גובה כמו שאר הכרטיסיות */
             }
 
             .card-wrapper.personal-tasks {
