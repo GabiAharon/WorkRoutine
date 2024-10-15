@@ -485,7 +485,7 @@ body {
 
 /* הקוד הקיים נשאר כמו שהוא */
 
-/* מדיה קווירי לטלפונים ניידים */
+/* עדכון למדיה קווירי לטלפונים ניידים */
 @media (max-width: 767px) {
     .card-wrapper {
         flex: 0 0 100%;
@@ -521,6 +521,18 @@ body {
         transform: none;
         flex-direction: row;
     }
+
+    #news-ticker {
+        position: absolute;
+        top: 0;
+        bottom: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1001;
+    }
+
+    .hero-image-container {
+        margin-top: 40px; /* מרווח עבור התזכורות */
+    }
 }
 
 /* סגנונות להתקנת האפליקציה */
@@ -535,7 +547,6 @@ body {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    display: none;
     z-index: 1000;
 }
 
