@@ -553,3 +553,9 @@ body {
 #install-button:hover {
     background-color: #0056b3;
 }
+
+@media (max-width: 767px) {
+    .card-wrapper.personal-tasks {
+        order: -1;
+    }
+}
