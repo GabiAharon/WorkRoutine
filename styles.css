@@ -25,7 +25,7 @@ h1 {
         top: 0;
         left: 0;
         right: 0;
-        z-index: 1000;
+        z-index: 1001;
         background-color: rgba(0, 0, 0, 0.8);
     }
 
@@ -33,9 +33,13 @@ h1 {
         margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
     }
 
-    .card-wrapper {
+    .card-wrapper, .card-wrapper.personal-tasks {
         flex: 0 0 100%;
         max-width: 100%;
+    }
+
+    .card.personal-tasks {
+        height: 450px; /* אותו גובה כמו שאר הכרטיסיות */
     }
 
     .card-wrapper.personal-tasks {
