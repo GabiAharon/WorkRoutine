@@ -20,6 +20,14 @@ h1 {
 
 /* הוסף את ה-media query לסוף הקובץ */
 @media (max-width: 767px) {
+    body {
+        background-color: #f0f0f0; /* וודא שהרקע לא שחור */
+    }
+
+    .container-fluid {
+        background-color: transparent; /* הסר כל רקע שחור אפשרי */
+    }
+
     #news-ticker {
         position: absolute;
         top: 0;
@@ -31,6 +39,12 @@ h1 {
 
     .hero-image-container {
         margin-top: 40px; /* התאם את הערך הזה לפי הגובה של התזכורות */
+        height: auto; /* אפשר לתמונה להתאים את עצמה */
+    }
+
+    .hero-image {
+        max-width: 100%;
+        height: auto;
     }
 
     .card-wrapper, .card-wrapper.personal-tasks {
@@ -39,7 +53,8 @@ h1 {
     }
 
     .card.personal-tasks {
-        height: 450px; /* אותו גובה כמו שאר הכרטיסיות */
+        height: auto; /* אפשר לכרטיסייה להתרחב לפי התוכן */
+        min-height: 450px;
     }
 
     .card-wrapper.personal-tasks {
@@ -48,5 +63,10 @@ h1 {
 
     .app-icons {
         display: none;
+    }
+
+    /* הוסף שקיפות לכל האלמנטים שעלולים להיות שחורים */
+    .card, .card-inner, .card-front, .card-back {
+        background-color: rgba(255, 255, 255, 0.9);
     }
 }
