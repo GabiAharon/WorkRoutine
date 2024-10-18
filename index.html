@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שגרות העבודה היומיות שלי</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2193b0">
+    <!-- קישורי CSS של Bootstrap, Font Awesome ו-Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background: linear-gradient(135deg, #f0f0f0, #d9e4f5);
+            overflow-y: auto;
+            perspective: 1000px;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .hero-image-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            margin-bottom: 0; /* הסרת רווח */
+            position: relative; /* הוספה חדשה */
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* כפתור ספוטיפיי */
+        .spotify-button {
+            position: absolute;
+            top: 20px; /* מיקום עליון */
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .spotify-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* תזכורות מתחת לתמונת HERO */
+        #news-ticker {
+            width: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: white;
+            padding: 10px;
+            overflow: hidden;
+            /* הסרת margin-bottom כדי לאפשר גלילה לכפתור ה-+ */
+        }
+
+        #news-ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding-bottom: 2rem; /* רווח מהסוף כדי לאפשר גלילה לכפתור ה-+ */
+        }
+
+        .card-wrapper {
+            width: 100%;
+            max-width: 500px;
+            perspective: 1000px;
+            margin-bottom: 30px; /* מוסיף רווח נוסף בתחתית כל כרטיסייה */
+        }
+
+        /* הגדרות מיוחדות לכרטיסייה קטנה */
+        .card-wrapper.small-card {
+            width: 100%;
+            max-width: 250px; /* הגבלת רחב הכרטיסייה הקטנה */
+            margin-bottom: 30px;
+        }
+
+        .card-wrapper.small-card .card {
+            width: 100%;
+            min-height: 300px; /* הקטנת הגובה המינימלי */
+            left: 0;
+        }
+
+        .card-wrapper.small-card .card-inner {
+            transition: transform 0.6s;
+        }
+
+        .card {
+            width: 150%;
+            left: 20%;
+            min-height: 550px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            cursor: pointer;
+            transform: rotateY(0deg);
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* הסרת טרנספורמציה מ-:hover כדי למנוע התנגשויות */
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* הוספת אפקט הגדלה ל-card-inner ב-hover */
+        .card:hover .card-inner {
+            transform: scale(1.1);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            min-height: 550px;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            min-height: 550px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            padding: 1rem;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: white;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #cc2b5e, #753a88);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-custom, .btn-edit {
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-custom {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #ff4e42;
+            transform: scale(1.05);
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .completed {
+            opacity: 0.6;
+            filter: grayscale(100%);
+        }
+
+        .completed::after {
+            content: "הושלם";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 3rem;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 1;
+            pointer-events: none; /* מאפשר ללחוץ על אלמנטים מתחת לטקסט */
+        }
+
+        .completed .control-buttons {
+            z-index: 2; /* וודא שהכפתורים נשארים מעל האפקט "הושלם" */
+        }
+
+        .completed .control-buttons i {
+            opacity: 0.7; /* הפוך את הכפתורים לשקופים מעט כדי לסמן מצב "הושלם" */
+        }
+
+        .completed .control-buttons i:hover {
+            opacity: 1; /* החזר אטימות מלאה בעת hover */
+        }
+
+        .task-list, .useful-links {
+            list-style-type: none;
+            padding: 0;
+            text-align: right;
+            width: 100%;
+            color: white;
+        }
+
+        .task-list li, .useful-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .task-list li a, .useful-links li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .task-list li a:hover, .useful-links li a:hover {
+            color: #ff6f61;
+        }
+
+        .center-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .merkaz-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.2rem;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid white;
+        }
+
+        .merkaz-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .checkbox-custom {
+            display: none;
+        }
+
+        .checkbox-custom-label {
+            display: inline-block;
+            position: relative;
+            padding-right: 35px;
+            cursor: pointer;
+            font-size: 18px;
+            user-select: none;
+            color: white;
+        }
+
+        /* מרכז את הסימון (✓) בתוך התיבה */
+        .checkbox-custom + .checkbox-custom-label:before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:before {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:after {
+            content: '\2714';
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            transform: translateY(-50%);
+            color: #2196F3;
+            font-size: 16px;
+        }
+
+        /* קו אופקי על הטקסט כאשר משימה הושלמה */
+        .checkbox-custom:checked + .checkbox-custom-label {
+            text-decoration: line-through;
+        }
+
+        /* כפתורי שליטה בכרטיסייה */
+        .control-buttons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .control-buttons i {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .control-buttons i:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .merkaz-selector {
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .merkaz-selector select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 30px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .merkaz-tasks {
+            display: none;
+        }
+
+        .merkaz-tasks.active {
+            display: block;
+        }
+
+        .completed-merkaz {
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .app-icons {
+            display: none;
+        }
+
+        .schedule-list {
+            list-style-type: none;
+            padding: 0;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .schedule-list > li {
+            margin-bottom: 15px;
+        }
+
+        /* כפתור ה-+ צף */
+        .fab {
+            position: fixed; /* מיקום קבע */
+            top: 20px; /* מיקום עליון */
+            right: 80px; /* מיקום מהימין (מתחשב באייקון הספוטיפיי) */
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 70px;
+            font-size: 40px;
+            cursor: move; /* שינוי סמן לכפתור נייד */
+            z-index: 2000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        /* עיצוב המודל */
+        .modal-custom {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            direction: rtl;
+        }
+
+        .modal-content-custom {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .close-modal {
+            color: rgba(255,255,255,0.7);
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: rgba(255,255,255,1);
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 30px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-modal {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 30px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-modal:hover {
+            background-color: #ff4e42;
+        }
+
+        @media (min-width: 768px) {
+            .hero-image-container {
+                height: 460px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            /* מיקום מותאם לכפתור ה-+ במסכים גדולים */
+            .fab {
+                top: 20px;
+                right: 80px; /* מתחשב במיקום הספוטיפיי */
+            }
+        }
+
+        .completed .control-buttons i,
+        .completed .btn-custom,
+        .completed .checkbox-custom,
+        .completed .checkbox-custom-label {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .completed .control-buttons i:hover,
+        .completed .btn-custom:hover,
+        .completed .checkbox-custom:hover,
+        .completed .checkbox-custom-label:hover {
+            opacity: 1;
+        }
+
+        .completed .reset-button {
+            opacity: 1 !important;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            flex-direction: row-reverse; /* הוספה חדשה */
+        }
+
+        .card-column {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            margin: 0 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* מוסיף רווח בין הכרטיסיות */
+        }
+
+        .card-column.left-column {
+            flex: 0 0 250px; /* שינוי: הגדרת רוחב קבוע לעמודה השמאלית */
+            margin-left: 20px; /* הוספת מרווח משמאל */
+        }
+
+        .card-wrapper.small-card {
+            width: 100%;
+            max-width: 250px; /* הגבלת רוחב הכרטיסייה הקטנה */
+            margin-bottom: 30px;
+        }
+
+        .card-wrapper.small-card .card {
+            width: 100%;
+            min-height: 300px; /* הקטנת הגובה המינימלי */
+            left: 0;
+        }
+
+        .card-wrapper.small-card .card-front,
+        .card-wrapper.small-card .card-back {
+            min-height: 300px; /* התאמת הגובה המינימלי */
+        }
+
+        /* הוספת מדיה קווריז להתאמה לנייד */
+        @media (max-width: 768px) {
+            .card-wrapper {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .card {
+                width: 100%;
+                left: 0;
+            }
+            
+            .container {
+                flex-direction: column;
+            }
+            
+            .card-column.left-column {
+                flex: 1;
+                margin-left: 0;
+                margin-bottom: 20px;
+            }
+            
+            .hero-image-container {
+                height: 200px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin: 1rem 0;
+            }
+            
+            .fab {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="hero-image-container">
+            <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
+            <!-- כפתור ספוטיפיי -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="spotify-button" onclick="openSpotify(event)">
+        </div>
+
+        <!-- תזכורות מתחת לתמונת HERO -->
+        <div id="news-ticker">
+            <div id="news-ticker-content">
+                <!-- תכנים יתווספו כאן דינמית -->
+            </div>
+        </div>
+
+        <!-- הכותרת מועברת לכאן, מתחת לתזכורות -->
+        <h1>שגרות העבודה היומיות שלי</h1>
+
+        <div class="container mt-5">
+            <div class="container">
+                <div class="card-column left-column">
+                    <!-- הכרטיסייה החדשה "כלים שימושיים" -->
+                    <div class="card-wrapper small-card">
+                        <div class="card">
+                            <div class="control-buttons">
+                                <i class="fas fa-grip-vertical drag-handle" title="הזז"></i>
+                                <i class="fas fa-sync-alt flip-icon" title="החלף צד"></i>
+                            </div>
+                            <div class="card-inner">
+                                <div class="card-front">
+                                    <h5 class="card-title">כלים שימושיים</h5>
+                                    <button class="btn-custom" onclick="flipCard(event)">הצג קישורים</button>
+                                </div>
+                                <div class="card-back">
+                                    <h5 class="card-title">קישורים שימושיים</h5>
+                                    <ul class="useful-links">
+                                        <!-- כאן נוסיף את הקישורים הרלוונטיים -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-column" id="card-container">
+                    <!-- כאן יבואו שאר הכרטיסיות הקיימות -->
+                    <!-- הן יתווספו דינמית באמצעות JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- כפתור פעולה צף עבור הוספת משימות אישיות -->
+    <div class="fab" id="fab" onclick="openTaskModal()">&#10010;</div>
+
+    <!-- מודל להוספת משימות אישיות -->
+    <div id="task-modal" class="modal-custom">
+        <div class="modal-content-custom">
+            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+            <h5 class="card-title">הוסף משימה אישית</h5>
+            <input type="text" id="modal-new-task" class="task-input" placeholder="הוסף משימה חדשה (הוסף 'דחוף' או 'בנחת' בסוף)">
+            <button class="btn-modal" onclick="addTaskFromModal()">הוסף משימה</button>
+        </div>
+    </div>
+
+    <!-- קבצי JavaScript של Bootstrap ו-SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        const cardData = [
+            {
+                title: "משימות אישיות",
+                frontContent: `<button class="btn-custom" onclick="openPersonalTasks(event)">הוסף/צפה במשימות</button>`,
+                backContent: `
+                    <h5 class="card-title">משימות אישיות</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס משימות"></i>
+                    </div>
+                    <h6 class="mt-3">משימות דחופות:</h6>
+                    <ul id="urgent-tasks" class="task-list"></ul>
+                    <h6 class="mt-3">משימות בנחת:</h6>
+                    <ul id="relaxed-tasks" class="task-list"></ul>
+                    <button class="btn-custom mt-3" onclick="openTaskModal(event)">הוסף משימה</button>
+                `
+            },
+            {
+                title: "Salesforce",
+                frontContent: `
+                    <img src="https://c1.sfdcstatic.com/content/dam/sfdc-docs/www/logos/logo-salesforce.svg" alt="Salesforce" class="card-icon" onclick="openSalesforce(event)">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות Salesforce</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס משימות"></i>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task1" class="checkbox-custom">
+                            <label for="salesforce-task1" class="checkbox-custom-label">לעבור על כל מרכז</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task2" class="checkbox-custom">
+                            <label for="salesforce-task2" class="checkbox-custom-label">לשים לב למגמה של חניכים</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="salesforce-task3" class="checkbox-custom">
+                            <label for="salesforce-task3" class="checkbox-custom-label">לוודא תיעוד מפגשים</label>
+                        </li>
+                    </ul>
+                    <button class="btn-custom mt-3" onclick="completeCard(event)">השלם משימות</button>
+                `
+            },
+            {
+                title: "תיקי מרכז",
+                frontContent: `
+                    <div class="center-item">
+                        <a href="https://docs.google.com/spreadsheets/d/1WUox7YWDQ4rdzjoua7ymkd3_P6LSfn8TH0bMP6BRqas/edit?gid=0#gid=0" target="_blank" class="merkaz-button">נתיבות</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1DZP8pN_IFJkIEF3tRuQKmSnZwNWbrzfvO4vs9EwcFhI/edit#gid=1505285157" target="_blank" class="merkaz-button">באר שבע</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1aBxCQuz9PPXrVF85Ww54nvNZpnfJXDMhSAz3T4AnR-s/edit?gid=0#gid=0" target="_blank" class="merkaz-button">ירושלים-בויאר</a>
+                        <a href="https://docs.google.com/spreadsheets/d/163_7WH6g9Q8uoW-U5rJTwnlXZy7J7m0VrXmcXyV3AqY/edit?gid=0#gid=0" target="_blank" class="merkaz-button">כפר חב"ד</a>
+                        <a href="https://docs.google.com/spreadsheets/d/1J5ntGNoEI_J7fsDeljPROgGm7VLtVPbkWtUr_69fQVo/edit?gid=0#gid=0" target="_blank" class="merkaz-button">שדרות</a>
+                    </div>
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות תיקי מרכז</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס משימות"></i>
+                    </div>
+                    <div class="merkaz-selector">
+                        <select id="merkaz-select" onchange="showMerkazTasks(event)" onclick="event.stopPropagation();">
+                            <option value="">בחר מרכז</option>
+                            <option value="netivot">נתיבות</option>
+                            <option value="beer-sheva">באר שבע</option>
+                            <option value="jerusalem">ירושלים-בויאר</option>
+                            <option value="kfar-chabad">כפר חב"ד</option>
+                            <option value="sderot">שדרות</option>
+                        </select>
+                    </div>
+                    <!-- משימות לכל מרכז -->
+                    <div id="netivot" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task1" class="checkbox-custom">
+                                <label for="netivot-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task2" class="checkbox-custom">
+                                <label for="netivot-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="netivot-task3" class="checkbox-custom">
+                                <label for="netivot-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="beer-sheva" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task1" class="checkbox-custom">
+                                <label for="beer-sheva-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task2" class="checkbox-custom">
+                                <label for="beer-sheva-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="beer-sheva-task3" class="checkbox-custom">
+                                <label for="beer-sheva-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="jerusalem" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task1" class="checkbox-custom">
+                                <label for="jerusalem-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task2" class="checkbox-custom">
+                                <label for="jerusalem-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="jerusalem-task3" class="checkbox-custom">
+                                <label for="jerusalem-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="kfar-chabad" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task1" class="checkbox-custom">
+                                <label for="kfar-chabad-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task2" class="checkbox-custom">
+                                <label for="kfar-chabad-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="kfar-chabad-task3" class="checkbox-custom">
+                                <label for="kfar-chabad-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="sderot" class="merkaz-tasks">
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task1" class="checkbox-custom">
+                                <label for="sderot-task1" class="checkbox-custom-label">לוודא שאין משימות פתוחות</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task2" class="checkbox-custom">
+                                <label for="sderot-task2" class="checkbox-custom-label">לעבור על תכנית עבודה</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="sderot-task3" class="checkbox-custom">
+                                <label for="sderot-task3" class="checkbox-custom-label">לבדוק התקדמות פרויקטים</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="completed-merkaz" id="completed-merkaz"></div>
+                    <button class="btn-custom mt-3" onclick="completeMerkazCard(event)">השלם משימות</button>
+                    <button class="btn-edit" onclick="editMerkazCard(event)">ערוך שוב</button>
+                `
+            },
+            {
+                title: "מעבר על מיילים",
+                frontContent: `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" alt="Outlook" class="card-icon" onclick="openOutlook(event)">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות מיילים</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס משימות"></i>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="email-task1" class="checkbox-custom">
+                            <label for="email-task1" class="checkbox-custom-label">לענות למיילים דחופים</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="email-task2" class="checkbox-custom">
+                            <label for="email-task2" class="checkbox-custom-label">לארגן תיבת דואר נכנס</label>
+                        </li>
+                    </ul>
+                    <button class="btn-custom mt-3" onclick="completeCard(event)">השלם משימות</button>
+                `
+            },
+            {
+                title: "Trello",
+                frontContent: `
+                    <img src="https://cdn.worldvectorlogo.com/logos/trello.svg" alt="Trello" class="card-icon" onclick="openTrello(event)">
+                `,
+                backContent: `
+                    <h5 class="card-title">משימות Trello</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס משימות"></i>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" id="trello-task1" class="checkbox-custom">
+                            <label for="trello-task1" class="checkbox-custom-label">לעבור על משימות חדשות</label>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" id="trello-task2" class="checkbox-custom">
+                            <label for="trello-task2" class="checkbox-custom-label">לעדכן סטטוס משימות</label>
+                        </li>
+                    </ul>
+                    <button class="btn-custom mt-3" onclick="completeCard(event)">השלם משימות</button>
+                `
+            },
+            {
+                title: "לוז קבוע",
+                frontContent: `<button class="btn-custom" onclick="openPersonalTasks(event)">צפה בלוז</button>`,
+                backContent: `
+                    <h5 class="card-title">לוז שבועי קבוע</h5>
+                    <div class="control-buttons">
+                        <i class="fas fa-redo reset-button" onclick="resetCard(event)" title="איפוס לוז"></i>
+                    </div>
+                    <div class="schedule-container" style="height: 350px; overflow-y: auto;">
+                        <ul class="schedule-list">
+                            <li><strong>יום ראשון:</strong> 09:00 - פ.ע עם יוני קדם, 14:00 - פ.ע עם יקיר כרמל</li>
+                            <li><strong>יום שני:</strong> 11:00 - פ.ע עם תאיר חיים</li>
+                            <li><strong>יום שלישי:</strong> 10:00 - פ.ע עם מנשה</li>
+                            <li><strong>יום רביעי:</strong> 12:00 - ישיבת צוות</li>
+                            <li><strong>יום חמישי:</strong> 13:00 - פ.ע עם יונת גרינפלד</li>
+                        </ul>
+                    </div>
+                `
+            }
+        ];
+
+        function createCard(cardInfo) {
+            const cardWrapper = document.createElement('div');
+            cardWrapper.className = 'card-wrapper' + (cardInfo.title === "כלים שימושיים" ? ' small-card' : '');
+            cardWrapper.innerHTML = `
+                <div class="card" onclick="flipCard(event)">
+                    <div class="control-buttons">
+                        <i class="fas fa-grip-vertical drag-handle" title="הזז"></i>
+                        <i class="fas fa-sync-alt flip-icon" title="החלף צד"></i>
+                    </div>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h5 class="card-title">${cardInfo.title}</h5>
+                            ${cardInfo.frontContent}
+                        </div>
+                        <div class="card-back">
+                            ${cardInfo.backContent}
+                        </div>
+                    </div>
+                </div>
+            `;
+            return cardWrapper;
+        }
+
+        const cardContainer = document.getElementById('card-container');
+        cardData.forEach(card => {
+            cardContainer.appendChild(createCard(card));
+        });
+
+        new Sortable(cardContainer, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            forceFallback: true,
+            fallbackClass: 'sortable-fallback'
+        });
+
+        function flipCard(event) {
+            // מונע סיבוב אם הלחיצה הייתה על אלמנט פנימי שאינו הכרטיסייה עצמה
+            const clickableElements = ['BUTTON', 'INPUT', 'A', 'LABEL', 'IMG', 'I']; // הוספת 'I' לאייקונים
+            if (clickableElements.includes(event.target.tagName)) return;
+            const card = event.currentTarget;
+            card.classList.toggle('is-flipped');
+        }
+
+        function completeCard(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const card = button.closest('.card');
+            card.classList.toggle('completed');
+            updateCompletionStatus(card);
+
+            // שינוי הסגנון של האלמנטים במקום הסתרתם
+            const completeButton = card.querySelector('.btn-custom');
+            const checkboxes = card.querySelectorAll('.checkbox-custom, .checkbox-custom-label');
+            const resetButton = card.querySelector('.reset-button');
+            
+            if (card.classList.contains('completed')) {
+                if (completeButton) completeButton.style.opacity = '0.5';
+                checkboxes.forEach(elem => elem.style.opacity = '0.5');
+                if (resetButton) resetButton.style.opacity = '1'; // וודא שכפתור האיפוס נשאר בולט
+            } else {
+                if (completeButton) completeButton.style.opacity = '1';
+                checkboxes.forEach(elem => elem.style.opacity = '1');
+            }
+        }
+
+        function updateCompletionStatus(card) {
+            const frontSide = card.querySelector('.card-front');
+            const backSide = card.querySelector('.card-back');
+            const completionMessage = card.classList.contains('completed') ? ' - הושלם' : '';
+            
+            frontSide.querySelector('.card-title').textContent = frontSide.querySelector('.card-title').textContent.split(' - ')[0] + (completionMessage ? completionMessage : '');
+            backSide.querySelector('.card-title').textContent = backSide.querySelector('.card-title').textContent.split(' - ')[0] + (completionMessage ? completionMessage : '');
+        }
+
+        // הימנעות מסיבוב הכרטיסייה בעת לחיצה על התפריטים הנפתחים
+        document.querySelectorAll('.merkaz-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                // פתיחת הקישור לא נעשית כאן, מוגדרת כבר ב-HTML עם href ו-target="_blank"
+            });
+        });
+
+        // הימנעות מסיבוב הכרטיסייה בעת לחיצה על כפתורים פנימיים ותיבות סימון
+        document.querySelectorAll('.btn-custom, .btn-edit, .checkbox-custom-label, .reset-button').forEach(element => {
+            element.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+
+        // פונקציית פתיחת/סגירת המודל להוספת משימות אישיות
+        function openTaskModal(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('task-modal').style.display = 'block';
+            document.getElementById('modal-new-task').focus();
+        }
+
+        function closeTaskModal() {
+            document.getElementById('task-modal').style.display = 'none';
+            document.getElementById('modal-new-task').value = '';
+        }
+
+        function addTaskFromModal() {
+            const taskInput = document.getElementById('modal-new-task');
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                let priority = 'relaxed';
+                let cleanTaskText = taskText;
+
+                if (taskText.endsWith('דחוף')) {
+                    priority = 'urgent';
+                    cleanTaskText = taskText.slice(0, -5).trim();
+                } else if (taskText.endsWith('בנחת')) {
+                    cleanTaskText = taskText.slice(0, -5).trim();
+                }
+
+                // מציאת הכרטיסייה של המשימות האישיות
+                const personalTasksCard = document.querySelector('.card-wrapper.small-card .card-back');
+                const urgentTasks = personalTasksCard.querySelector('#urgent-tasks');
+                const relaxedTasks = personalTasksCard.querySelector('#relaxed-tasks');
+                const taskList = priority === 'urgent' ? urgentTasks : relaxedTasks;
+
+                const taskItem = document.createElement('li');
+                taskItem.className = 'task-item';
+                const checkboxId = 'personal-task-' + Date.now();
+                taskItem.innerHTML = `
+                    <input type="checkbox" id="${checkboxId}" class="checkbox-custom">
+                    <label for="${checkboxId}" class="checkbox-custom-label">${cleanTaskText}</label>
+                `;
+                taskList.appendChild(taskItem);
+                taskInput.value = '';
+                closeTaskModal();
+
+                // הוספת אירוע stopPropagation לתיבת הסימון החדשה
+                const newCheckbox = taskItem.querySelector('.checkbox-custom');
+                const newLabel = taskItem.querySelector('.checkbox-custom-label');
+                newCheckbox.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    toggleTaskCompletion(this);
+                });
+                newLabel.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            }
+        }
+
+        function toggleTaskCompletion(checkbox) {
+            const taskLabel = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                taskLabel.style.textDecoration = 'line-through';
+            } else {
+                taskLabel.style.textDecoration = 'none';
+            }
+        }
+
+        function openOutlook(event) {
+            event.stopPropagation();
+            window.location.href = "ms-outlook:";
+            setTimeout(function() {
+                window.location.href = "outlook:";
+            }, 100);
+        }
+
+        function openSpotify(event) {
+            event.stopPropagation();
+            window.location.href = "spotify:";
+            setTimeout(function() {
+                window.open('https://open.spotify.com', '_blank');
+            }, 100);
+        }
+
+        function openTrello(event) {
+            event.stopPropagation();
+            window.location.href = "trello:";
+            setTimeout(function() {
+                window.open('https://trello.com', '_blank');
+            }, 100);
+        }
+
+        function openSalesforce(event) {
+            event.stopPropagation();
+            window.open('https://login.salesforce.com/', '_blank');
+        }
+
+        // פונקציות השלמת משימות
+        function completeMerkazCard(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const card = button.closest('.card');
+            const allMerkazTasks = card.querySelectorAll('.merkaz-tasks');
+            const allCompleted = Array.from(allMerkazTasks).every(merkaz => {
+                const checkboxes = merkaz.querySelectorAll('.checkbox-custom');
+                return Array.from(checkboxes).every(checkbox => checkbox.checked);
+            });
+            
+            if (allCompleted) {
+                card.classList.add('completed');
+                updateCompletionStatus(card);
+                const completedMerkaz = card.querySelector('.completed-merkaz');
+                if (completedMerkaz) {
+                    completedMerkaz.textContent = 'כל המרכזים הושלמו';
+                }
+            } else {
+                const confirmClose = confirm('לא סיימת את כלל המרכזים, האם אתה בטוח שברצונך לסגור את הכרטיסייה?');
+                if (confirmClose) {
+                    card.classList.add('completed');
+                    updateCompletionStatus(card);
+                    const completedMerkaz = card.querySelector('.completed-merkaz');
+                    if (completedMerkaz) {
+                        completedMerkaz.textContent = 'הכרטיסייה נסגרה ללא השלמת כל המרכזים';
+                    }
+                }
+            }
+        }
+
+        function editMerkazCard(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const card = button.closest('.card');
+            card.classList.remove('completed');
+            updateCompletionStatus(card);
+            card.querySelectorAll('.checkbox-custom').forEach(checkbox => {
+                checkbox.checked = false;
+                const label = checkbox.nextElementSibling;
+                label.style.textDecoration = 'none';
+            });
+            const completedMerkaz = card.querySelector('.completed-merkaz');
+            if (completedMerkaz) {
+                completedMerkaz.textContent = '';
+            }
+        }
+
+        function showMerkazTasks(event) {
+            event.stopPropagation();
+            const selectedMerkaz = event.target.value;
+            const card = event.currentTarget.closest('.card');
+            card.querySelectorAll('.merkaz-tasks').forEach(merkaz => {
+                merkaz.style.display = 'none';
+            });
+            if (selectedMerkaz) {
+                card.querySelector('#' + selectedMerkaz).style.display = 'block';
+            }
+        }
+
+        // קיצורי מקלדת ופונקציות נוספות
+        // קיצור מקלדת לפתיחת המודל של משימות אישיות
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'a') {
+                event.preventDefault();
+                openTaskModal();
+            }
+        });
+
+        // הפעלת הפונקציה כשמשתמש לוחץ על Enter במודל
+        document.getElementById('modal-new-task').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addTaskFromModal();
+            }
+        });
+
+        // הוספת אירוע לחיצה לכפתור "הוסף משימה" במודל
+        document.querySelector('.btn-modal').addEventListener('click', function(event) {
+            event.preventDefault();
+            addTaskFromModal();
+        });
+
+        // הוספת אירועי stopPropagation לכל תיבות הסימון
+        document.querySelectorAll('.checkbox-custom').forEach(checkbox => {
+            checkbox.addEventListener('click', function(event) {
+                event.stopPropagation();
+                toggleTaskCompletion(this);
+            });
+        });
+
+        // פונקציית פתיחת/סגירת כרטיסיית משימות אישיות
+        function openPersonalTasks(event) {
+            event.stopPropagation();
+            // Flip the card
+            const card = event.currentTarget.closest('.card');
+            card.classList.toggle('is-flipped');
+        }
+
+        // תזכורות דינמיות
+        const newsTicker = document.getElementById('news-ticker-content');
+        const newsItems = [
+            'תזכורת: לשלוח הודעה למנהלים לסגור דיווחי שעות כל יום ביעי',
+            'בדוק את הדוחות החודשיים בתחילת כל חודש',
+            'תזכורת: פגישת צוות שבועית ביום שני',
+            'עדכן את תוכנית העבודה השבועית',
+            'בדוק את התקדמות הפרויקטים בסוף כל שבוע'
+        ];
+        newsTicker.innerHTML = newsItems.join(' | ');
+
+        // פונקציית גרירה לכפתור ה-FAB
+        const fab = document.getElementById('fab');
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+
+        fab.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            offset.x = e.clientX - fab.offsetLeft;
+            offset.y = e.clientY - fab.offsetTop;
+            document.body.style.userSelect = 'none'; // מונע בחירה בעת גרירה
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                let left = e.clientX - offset.x;
+                let top = e.clientY - offset.y;
+
+                // הגבלת המיקום בתוך החלון
+                const maxLeft = window.innerWidth - fab.offsetWidth;
+                const maxTop = window.innerHeight - fab.offsetHeight;
+
+                left = Math.max(0, Math.min(left, maxLeft));
+                top = Math.max(0, Math.min(top, maxTop));
+
+                fab.style.left = left + 'px';
+                fab.style.top = top + 'px';
+                fab.style.right = 'auto';
+                fab.style.bottom = 'auto';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            document.body.style.userSelect = 'auto'; // החזרת הבחירה
+        });
+
+        // התאמת כפתור ה-FAB למגעים ניידים
+        fab.addEventListener('touchstart', function(e) {
+            isDragging = true;
+            const touch = e.touches[0];
+            offset.x = touch.clientX - fab.offsetLeft;
+            offset.y = touch.clientY - fab.offsetTop;
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (isDragging) {
+                const touch = e.touches[0];
+                let left = touch.clientX - offset.x;
+                let top = touch.clientY - offset.y;
+
+                // הגבלת המיקום בתוך החלון
+                const maxLeft = window.innerWidth - fab.offsetWidth;
+                const maxTop = window.innerHeight - fab.offsetHeight;
+
+                left = Math.max(0, Math.min(left, maxLeft));
+                top = Math.max(0, Math.min(top, maxTop));
+
+                fab.style.left = left + 'px';
+                fab.style.top = top + 'px';
+                fab.style.right = 'auto';
+                fab.style.bottom = 'auto';
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+
+        // פונקציית איפוס כרטיסיה
+        function resetCard(event) {
+            event.stopPropagation();
+            const resetButton = event.currentTarget;
+            const card = resetButton.closest('.card');
+            card.classList.remove('completed');
+            updateCompletionStatus(card);
+            
+            // החזרת האטימות של כל האלמנטים
+            const completeButton = card.querySelector('.btn-custom');
+            const checkboxes = card.querySelectorAll('.checkbox-custom, .checkbox-custom-label');
+            
+            if (completeButton) completeButton.style.opacity = '1';
+            checkboxes.forEach(elem => {
+                elem.style.opacity = '1';
+                if (elem.type === 'checkbox') {
+                    elem.checked = false;
+                } else {
+                    elem.style.textDecoration = 'none';
+                }
+            });
+
+            // איפוס טקסט ההשלמה אם קיים
+            const completedMerkaz = card.querySelector('.completed-merkaz');
+            if (completedMerkaz) {
+                completedMerkaz.textContent = '';
+            }
+        }
+
+        // פונקציה להוספת קישורים לכרטיסיית "כלים שימושיים"
+        function addUsefulLink(name, url) {
+            const linksList = document.querySelector('.useful-links');
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+            linksList.appendChild(listItem);
+        }
+
+        // הוספת קישורים לדוגמה (תוכל להחליף אותם בקישורים הרלוונטיים שלך)
+        addUsefulLink('Google', 'https://www.google.com');
+        addUsefulLink('YouTube', 'https://www.youtube.com');
+        addUsefulLink('GitHub', 'https://github.com');
+        addUsefulLink('Stack Overflow', 'https://stackoverflow.com');
+        addUsefulLink('Mozilla Developer Network', 'https://developer.mozilla.org');
+
+        // קוד להתקנת PWA
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('pwa-banner').style.display = 'block';
+        });
+
+        document.getElementById('install-pwa').addEventListener('click', (e) => {
+            document.getElementById('pwa-banner').style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('המשתמש קיבל את הבקשה להתקנת ה-PWA');
+                } else {
+                    console.log('המשתמש דחה את הבקשה להתקנת ה-PWA');
+                }
+                deferredPrompt = null;
+            });
+        });
+
+        document.getElementById('close-pwa-banner').addEventListener('click', () => {
+            document.getElementById('pwa-banner').style.display = 'none';
+        });
+
+        // רישום service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
