@@ -159,6 +159,8 @@ function showInstallPromotion() {
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
           console.log('המשתמש התקין את האפליקציה');
+        } else {
+          console.log('המשתמש דחה את ההתקנה');
         }
         deferredPrompt = null;
       });
@@ -166,3 +168,7 @@ function showInstallPromotion() {
   });
   document.body.appendChild(installButton);
 }
+
+window.addEventListener('appinstalled', (evt) => {
+  console.log('האפליקציה הותקנה בהצלחה');
+});
