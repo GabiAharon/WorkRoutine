@@ -146,28 +146,44 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // עדכון ממשק המשתמש להציג אפשרות התקנה
-  showInstallPromotion();
+  showInstallBanner();
 });
 
-function showInstallPromotion() {
-  const installButton = document.createElement('button');
-  installButton.textContent = 'התקן את האפליקציה';
-  installButton.classList.add('install-button');
-  installButton.addEventListener('click', (e) => {
+function showInstallBanner() {
+  const banner = document.createElement('div');
+  banner.className = 'install-banner';
+  banner.innerHTML = `
+    האם תרצה להתקין את האפליקציה?
+    <button onclick="installApp()">התקן</button>
+    <button onclick="dismissInstallBanner()">לא עכשיו</button>
+  `;
+  document.body.appendChild(banner);
+  setTimeout(() => {
+    banner.style.display = 'block';
+  }, 1000);
+}
+
+window.installApp = function() {
+  if (deferredPrompt) {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
-        console.log('המשתמש קיבל את ההתקנה');
-      } else {
-        console.log('המשתמש דחה את ההתקנה');
+        console.log('המשתמש התקין את האפליקציה');
       }
       deferredPrompt = null;
     });
-  });
-  document.body.appendChild(installButton);
-}
+  }
+  dismissInstallBanner();
+};
+
+window.dismissInstallBanner = function() {
+  const banner = document.querySelector('.install-banner');
+  if (banner) {
+    banner.style.display = 'none';
+  }
+};
 
 window.addEventListener('appinstalled', (evt) => {
   console.log('האפליקציה הותקנה בהצלחה');
+  dismissInstallBanner();
 });
