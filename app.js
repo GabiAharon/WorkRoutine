@@ -146,6 +146,7 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
+  // עדכון ממשק המשתמש להציג אפשרות התקנה
   showInstallPromotion();
 });
 
@@ -153,18 +154,16 @@ function showInstallPromotion() {
   const installButton = document.createElement('button');
   installButton.textContent = 'התקן את האפליקציה';
   installButton.classList.add('install-button');
-  installButton.addEventListener('click', () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('המשתמש התקין את האפליקציה');
-        } else {
-          console.log('המשתמש דחה את ההתקנה');
-        }
-        deferredPrompt = null;
-      });
-    }
+  installButton.addEventListener('click', (e) => {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('המשתמש קיבל את ההתקנה');
+      } else {
+        console.log('המשתמש דחה את ההתקנה');
+      }
+      deferredPrompt = null;
+    });
   });
   document.body.appendChild(installButton);
 }
