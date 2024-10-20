@@ -1,8 +1,8 @@
 {
   "name": "שגרות העבודה היומיות שלי",
   "short_name": "שגרות עבודה",
-  "start_url": "./",
-  "scope": ".",
+  "description": "אפליקציית ניהול שגרות עבודה יומיות",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2193b0",
