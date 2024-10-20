@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-work-routines-v3';
+const CACHE_NAME = 'my-work-routines-v4';
 const urlsToCache = [
   './',
   './index.html',
@@ -7,8 +7,8 @@ const urlsToCache = [
   './script.js',
   './mobile.js',
   './manifest.json',
-  './icon-192x192.png',
-  './icon-512x512.png'
+  './128.png',
+  './512.png'
 ];
 
 self.addEventListener('install', event => {
