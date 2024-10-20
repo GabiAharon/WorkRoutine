@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שגרות העבודה היומיות שלי</title>
+    <!-- קישורי CSS של Bootstrap, Font Awesome ו-Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2193b0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="שגרות עבודה">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    <meta name="description" content="אפליקציית שגרות העבודה היומיות שלי">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="hero-image-container">
+            <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
+            <!-- כפתור ספוטיפיי -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" class="spotify-button" onclick="openSpotify(event)">
+        </div>
+
+        <!-- תזכורות מתחת לתמונת HERO -->
+        <div id="news-ticker">
+            <div id="news-ticker-content">
+                <!-- תכנים יתווספו כאן דינמית -->
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <h1>שגרות העבודה היומיות שלי</h1>
+
+            <div class="card-container" id="card-container">
+                <!-- הכרטיסיות יוכנסו כאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <!-- כפתור פעולה צף עבור הוספת משימות אישיות -->
+    <div class="fab" id="fab" onclick="openTaskModal()">&#10010;</div>
+
+    <!-- מודל להוספת משימות אישיות -->
+    <div id="task-modal" class="modal-custom">
+        <div class="modal-content-custom">
+            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+            <h5 class="card-title">הוסף משימה אישית</h5>
+            <input type="text" id="modal-new-task" class="task-input" placeholder="הוסף משימה חדשה (הוסף 'דחוף' או 'בנחת' בסוף)">
+            <button class="btn-modal" onclick="addTaskFromModal()">הוסף משימה</button>
+        </div>
+    </div>
+
+    <!-- הוספת המודל להצגת תשובות ה-AI -->
+    <div id="ai-response-modal" class="modal-custom">
+        <div class="modal-content-custom">
+            <span class="close-modal" onclick="closeAIResponseModal()">&times;</span>
+            <h5 class="card-title">הצעות מ-AI</h5>
+            <div id="ai-response-content"></div>
+        </div>
+    </div>
+
+    <!-- קישור לקבצי JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script type="module" src="/app.js"></script>
+    <script src="/script.js"></script>
+    <script src="/mobile.js"></script>
+</body>
+</html>
