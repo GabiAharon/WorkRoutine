@@ -139,3 +139,28 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// הוספת הודעת התקנה
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallPromotion();
+});
+
+function showInstallPromotion() {
+    const installButton = document.createElement('button');
+    installButton.textContent = 'התקן את האפליקציה';
+    installButton.classList.add('install-button');
+    installButton.addEventListener('click', () => {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('המשתמש התקין את האפליקציה');
+            }
+            deferredPrompt = null;
+        });
+    });
+    document.body.appendChild(installButton);
+}
