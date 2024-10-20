@@ -21,6 +21,14 @@
     <link rel="icon" type="image/png" sizes="128x128" href="./128.png">
 </head>
 <body>
+    <script>
+      // בדיקה אם האפליקציה כבר מותקנת
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('האפליקציה כבר מותקנת');
+      } else {
+        console.log('האפליקציה לא מותקנת');
+      }
+    </script>
     <div class="container-fluid p-0">
         <div class="hero-image-container">
             <img src="https://i.postimg.cc/XvNRCbQ1/Jony-Gigapixel-Clipboard-0de07cb8f7120e1f2886f01e9e5066c88ed20fabd6621312a716555545b64f429-1.png" alt="Hero Image" class="hero-image">
@@ -47,7 +55,7 @@
     <!-- כפתור פעולה צף עבור הוספת משימות אישיות -->
     <div class="fab" id="fab" onclick="openTaskModal()">&#10010;</div>
 
-    <!-- מודל להוספת משימות אישי��ת -->
+    <!-- מודל להוספת משימות אישית -->
     <div id="task-modal" class="modal-custom">
         <div class="modal-content-custom">
             <span class="close-modal" onclick="closeTaskModal()">&times;</span>
